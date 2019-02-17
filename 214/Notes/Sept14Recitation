@@ -1,0 +1,111 @@
+Numeric Ints:
+	Decimal:
+		123
+		123L (L denotes Long)
+	Hex:
+		0-9,A-F
+	Octal:
+		0-7
+	Binary:
+		0-1
+Char/String:
+	char c1;
+	c1='a';
+
+	char* c2;
+	c2="a";
+//	c2[0] ==> 'a'
+//	c2[1] ==> '\0'
+
+size_t
+	unsigned integer type
+
+Constant Qualfiers:
+	
+	*p is constant, p can change
+		const char* p
+		char const* p
+
+	p is constant, *p can change
+		char* const p
+		(char*) const p
+		const (char*) p
+
+	both p and *p are constant
+		const char* const p
+		char const* const p
+
+Structs:
+
+	struct TokenizerT_ 
+	{
+		member list;
+	}
+
+	typedef struct TokenizerT_ Tokenizer;
+	Tokenizer Token;
+	Token.member = 5;
+
+Struct with int, char, float takes:
+	2 bytes + 1 byte + 4 bytes = 7 bytes
+Union with same attributes takes:
+	4 bytes
+
+Enum:
+	
+	enum
+	{
+		CV_EVENT_MOUSEMOVE=0;
+		CV_EVENT_MOUSELEFTDOWN=1;
+		CV_EVENT_MOUSELEFTUP=2;
+		CV_EVENT_MOUSERIGHTDOWN=3;
+		CV_EVENT_MOUSERIGHTUP=4;
+			...
+	}
+
+Functions:
+	
+	int func (int A, int B)
+	{
+		if (A<B)
+			return A;
+		else
+			return B;
+	}
+
+	Recursion:
+		int factorial (unsigned int i)
+		{
+			if (i <= 1)
+			{
+				reutrn 1;
+			}
+			else
+			{
+				return factorial(i-1)*i;
+			}
+		}
+
+	Functions are data-objects and therefore can have pointers
+	Why use function pointers?
+
+		int (*add) (int a, int b)
+		{
+			return a+b;
+		}
+
+		
+
+typedef vs. #define
+	typedef renames
+	#define can assign values
+
+	typedef is interpretted by compiler
+	#define is interpretted by pre-processor
+
+	examples:
+		typedef struct TokenizerT_ Tokenizer;
+		#define TRUE 1
+		#define FALSE 0
+
+	

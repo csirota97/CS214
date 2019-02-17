@@ -1,0 +1,241 @@
+#include "Merge.h"
+
+
+/*
+	For string arrays, call "divideStr(array, 0, size);"
+	For double arrays, call "divideDbl(array, 0, size);"
+	For long arrays, call "divideLng(array, 0, size);"
+*/
+int main(int argc, char* argv) {
+//	char* input[] = {"This", "Is", "A", "Test", "Array", "For", "My", "MergeSort"};
+	char* input[] = {"This", "Butt", "Toes", "Deba", "Sits", "Shit", "Pits", "Fits"};
+	long in2[]= {9,8,7,6,5,4,3,2};
+	int size = 8;
+
+	int test[size];
+	int* test2=divideLng(in2,test, 0, size-1);
+
+	for (; size>0;size--){
+		printf("%d\n",test[8-size]);
+	}
+
+	return 0;
+}
+
+int* divideStr (char* list[], int index[], int left, int right)
+{
+	String List[right];
+	int i;
+	for (i = 0; i<right;i++)
+	{
+		List[i].data=list[i];
+		List[i].index=i;
+	}
+//	printf("MS\n");
+	if (left<right) 
+	{
+//	printf("MSL\n");
+		divideStr(list,index,left, (left+right)/2);
+//	printf("MSR\n");
+		divideStr(list,index, ((left+right)/2)+1, right);
+		mergeStr(List,index,left, ((left+right)/2), right);
+	}
+}
+
+void mergeStr (String list[], int index[], int left, int mid, int right)
+{
+	String temp[right];
+	int l;
+	int m;
+	int i;
+
+	for(l = left, m = mid + 1, i = left; l <= mid && m <= right; i++) {
+		if(strcmp(list[l].data, list[m].data)<0)
+		{
+			temp[i].data = list[l].data;
+			temp[i].index = list[l].index;
+			l++;
+		}
+		else
+		{
+			temp[i].data = list[m].data;
+			temp[i].index = list[m].index;
+			m++;
+		}
+	}
+   
+	while(l <= mid)    
+	{
+		temp[i].data = list[l].data;
+		temp[i].index = list[l].index;
+		l++;i++;
+	}
+	while(m <= right)       
+	{
+		temp[i].data = list[m].data;
+		temp[i].index = list[m].index;
+		l++;m++;
+	}
+
+	for(i = left; i <= right; i++)
+	{
+		list[i].data = temp[i].data;
+		list[i].index = temp[i].index;
+	}
+	int out[right];
+
+	for(i = left; i <= right; i++)
+	{
+		out[i]=list[i].index;
+	}
+	index=out;
+}
+
+
+int* divideLng (long list[], int index[], int left, int right)
+{
+	Long List[right];
+	int i;
+	for (i = left; i<right;i++)
+	{
+		List[i].data=list[i];
+		List[i].index=i;
+	}
+
+
+	for(i = 0; i < right; i++)
+	{
+		printf("i=%d\n%d=%ld\n",i,List[i].index,List[i].data);
+	}
+printf("--------------------------------\n");
+	if (left<right) 
+	{
+		divideLng(list,index,left, (left+right)/2);
+		divideLng(list, index,((left+right)/2)+1, right);
+		mergeLng(List,index,left, ((left+right)/2), right);
+		return index;
+	}
+}
+
+void mergeLng (Long list[], int index[], int left, int mid, int right)
+{
+	Long temp[right];
+	int l;
+	int m;
+	int i;
+
+	for(l = left, m = mid + 1, i = left; l <= mid && m <= right; i++) {
+		if(list[l].data< list[m].data)
+		{
+			temp[i].data = list[l].data;
+			temp[i].index = list[l].index;
+			l++;
+		}
+		else
+		{
+			temp[i].data = list[m].data;
+			temp[i].index = list[m].index;
+			m++;
+		}
+	}
+   
+	while(l <= mid)    
+	{
+		temp[i].data = list[l].data;
+		temp[i].index = list[l].index;
+		l++;i++;
+	}
+	while(m <= right)       
+	{
+		temp[i].data = list[m].data;
+		temp[i].index = list[m].index;
+		l++;m++;
+	}
+
+	for(i = left; i <= right; i++)
+	{
+		list[i].data = temp[i].data;
+		list[i].index = temp[i].index;
+	}
+
+
+	int out[right];
+	printf("-----------------\n");
+	for(i = 0; i <= right; i++)
+	{
+		index[i]=list[i].index;
+		printf("%d=%d=%ld\n",index[i],list[i].index,list[i].data);
+	}
+}
+
+
+int* divideDbl (double list[], int index[], int left, int right)
+{	
+	Double List[right];
+	int i;
+	for (i = 0; i<right;i++)
+	{
+		List[i].data=list[i];
+		List[i].index=i;
+	}
+
+	if (left<right) 
+	{
+		divideDbl(list,index,left, (left+right)/2);
+		divideDbl(list, index,((left+right)/2)+1, right);
+		mergeDbl(List,index,left, ((left+right)/2), right);
+		return index;
+	}
+}
+
+void mergeDbl (Double list[], int index[], int left, int mid, int right)
+{
+	Double temp[right];
+	int l;
+	int m;
+	int i;
+
+	for(l = left, m = mid + 1, i = left; l <= mid && m <= right; i++) {
+		if(list[l].data< list[m].data)
+		{
+			temp[i].data = list[l].data;
+			temp[i].index = list[l].index;
+			l++;
+		}
+		else
+		{
+			temp[i].data = list[m].data;
+			temp[i].index = list[m].index;
+			m++;
+		}
+	}
+   
+	while(l <= mid)    
+	{
+		temp[i].data = list[l].data;
+		temp[i].index = list[l].index;
+		l++;i++;
+	}
+	while(m <= right)       
+	{
+		temp[i].data = list[m].data;
+		temp[i].index = list[m].index;
+		l++;m++;
+	}
+
+	for(i = left; i <= right; i++)
+	{
+		list[i].data = temp[i].data;
+		list[i].index = temp[i].index;
+	}
+
+	int out[right];
+
+	for(i = left; i < right; i++)
+	{
+		index[i]=list[i].index;
+		printf("%d=%d=%f\n",index[i],list[i].index,list[i].data);
+	}
+}
+
+

@@ -1,0 +1,214 @@
+Michael Russo - mr880
+Craig Sirota - cms631
+
+------------------------------------------------------------------------------
+Design:
+------------------------------------------------------------------------------
+
+	The design was based around adding two new functions to the previous project. 
+
+		int TraverseDirectory( char* , int , const char*, const char*, int, int);
+			- Opens directories, forks processes to run Asst0 and returns number of forked directories.
+		void BeginNewProcess(char* , const char* , char*, const char*);
+		
+	The first function (TraverseDirectory) is responsible for walking through a given directory and finding .csv files in which to sort over. This function works in three (main) parts. 
+	
+		1. Open the current directory
+		2. Iterate through the directory 
+		3. Send data to be processed
+
+	Parts, 2 and 3 happen inside of a while loop that checks for two conditions.
+
+		1. If current dirent is a directory
+		2. If current dirent is a file
+
+	If we find the current dirent is a directory, we fork a new processes that calls TraverseDirectory recursively, opening the new current directory and repeating the overall process. The parent processes continues to traverse the current directory. If we find the current direct is a .csv file, we also fork a new process that will run the basic processes of Asst0 (merge-sort). 
+ 
+	This function is also responsible for maintaining a counter for parent processes. Each time a directory is discovered, we fork a new process and increment a counter. In other words, parent directories who have child processes which are ALSO directories, will increment their own counters. We also do this for files whose processes we fork for. This counter is returned at the end of this function after waiting for it's child processes to end (and is returned in main also). These counters are added up by the main parent processes to give us our total number of processes. 
+
+	The second function that was added is basically a processes handler function (BeginNewProcess). 
+	Passed through are the filename (minus the .csv), our header column(target), the path TO our filename, and the output directory the user provides (or doesn't). 
+
+	This functions main responsibility is to run Asst0 on the file passed into it. It does this in three main segments. 
+		1. Build the output filename and output directory file.
+		2. Run Asst0
+		3. Populate output directory files with sorted output files. 
+	Once the program runs and returns back to TraverseDirectory, the cycle simply continues until every file in the scope of the directory is checked for .csv files.
+
+
+------------------------------------------------------------------------------
+Assumptions:
+------------------------------------------------------------------------------
+
+	Originally I had assumed we would be forking on every .csv file and NOT forking on directories. What ended up happening was the opposite, which resulted in less child process spawning and overall less confusion.
+
+	I also originally assumed allocating memory using malloc would work well enough on this data but eventually changed my approach to using calloc as it was more reliable in using strcat and strncat to build file paths. 
+
+	I wrongly assumed where each process would end, thinking it would end in each function instead of in main which made for a lot of confusion.
+
+------------------------------------------------------------------------------
+Difficulties:
+------------------------------------------------------------------------------
+
+	Originally, getting the child processes to print was a challenge. Simply using getpid() inside the child process resulted in duplicate print statements, as well as printing the child_pid from inside its parent process. 
+
+	After I was able to resolve that by printing inside a while loop that performed wait on the parent processes, getting the total child processes took far longer than anticipated. It too a lot of drawing diagrams of how child processes worked in order to figure out when to increment my counters and when to return status. 
+
+	Using I-Labs gave me issues with using malloc as well. Switching to calloc solved a lot of problems as well.
+
+	The instructions say that we need to accommodate for a maximum of 255 total files and directories. Originally I interpreted this as meaning 255 character length but later realized I had to accommodate for the possibility of much largest path sizes.
+
+
+------------------------------------------------------------------------------
+How to use: 
+------------------------------------------------------------------------------
+
+
+
+Makefile should be included in which case simply run 'make' which will run 
+
+	gcc -o scannerCSVsorter scannerCSVsorter.c mergesort.c -lm
+
+Then, on the command line:
+
+	./scannerCSVsorter -c <column-header> -d . -o ./Output
+
+
+The result should look something like this:
+
+	Michaels-MacBook-Pro:Asst_1 michaelrusso$ ./scannerCSVsorter -c "budget" -d . -o ./Output
+
+	Initial PID: 2650
+
+	PIDS of all child processes: 
+	2663 2659 2671 2666 2661 2658 2664 2669 2677 2673 2682 2680 2684 2686 2689 2688 2683 2687 2676 2667 2681 2685 2672 2668 2678 2675 2679 2674 2656 2665 2670 2662 2660 2655 2652 2654 2653 2657 2651 
+
+	Total number of processes: 40
+
+
+------------------------------------------------------------------------------
+Testing Environment:
+------------------------------------------------------------------------------
+
+test/
+	test2/
+		-test4.csv
+		-test5.csv
+	-test1.csv
+	-test2.csv
+	-test3.csv
+test1/
+	-dataset1_a4.csv
+	-dataset1_b4.csv
+	-dataset1_c4.csv
+	-dataset1_d4.csv
+test2/
+	-dataset2_a3.csv
+	-dataset2_b3.csv
+	-dataset2_c3.csv
+	-dataset2_d3.csv
+test3/
+	sub1/
+		-dataset1_a5.csv
+		-dataset1_b5.csv
+	sub2/
+		-dataset2_a5.csv
+		-dataset2_b5.csv
+	-dataset3_a5.csv
+	-dataset4_b5.csv
+	-dataset4_c5.csv
+test4/
+	sub1/
+		-dataset1_a2.csv
+	sub2/
+		-dataset2_a2.csv
+		-dataset2_b2.csv
+	sub3/
+		-dataset3_a2.csv
+		-dataset3_b2.csv
+		-dataset3_c2.csv
+-movie_metadata.csv
+
+("-" denotes files)
+------------------------------------------------------------------------------
+scannerCSVsorter.h: 
+------------------------------------------------------------------------------
+#endif
+#ifndef _POSIX_PATH_MAX
+#define _POSIX_PATH_MAX 512
+#endif
+
+	_POSIX_PATH_MAX is the maximum size of a path 
+
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <math.h>
+#include <sys/wait.h>
+
+struct _record
+{
+	char* target;
+	char* data;
+	int targetint;
+	double targetfloat;
+	struct _record* next;
+};
+typedef struct _record record;
+
+	struct _record is how we store our linked list of data from the csv files. 
+
+int gettype(char*);
+	- retrieves the data type of a string 
+	gettype takes in a char* and returns an integer:
+		1 : integer
+		2 : double
+		3 : string
+
+void FrontBackSplit(record*, record**, record**);
+	- Merge sort uses this function to split a linked list in to two halves
+
+void MergeSort(record**, int);
+	- The merge sort algorithm
+	
+char* trimwhitespace(char *);
+	- Used to trim white space from the front and back of a string
+	trimwhitespace takes in a char* and returns a char* with whitespaces removed from the beginning and end of a string
+
+void appendrecord(char* , char* );
+	- This is where the actual building of the main linked-list happens
+	appendrecord takes in a two strings and appends them to a node on a linked list.
+
+void printList(record*, int, char*);
+	- This writes out sorted files and stores them in our output directory (if provided)
+	printlist takes in the head of a linked list, an int reprenting type of data we are sorting over, and a string that will be the name of the output file created. printlist traverses through the linked list and writes it's data onto a .csv file. 
+
+void buildlist(int , char*, int, char*);
+	- This function parses through a .csv file and builds a linked linked list with its internal data.
+	buildlist takes in an integer representing the position of the data we are going to be sorting over, a path string, an integer representing our filetype (see gettype(char* )), and an outputfilename string which will be passed into appendrecord. 
+
+int findposition(const char* , char* );
+	- This function finds the position of our column-header (target) in the header file. (the number of commas passed until we reach our target).
+	findposition takes in a const char* which will be our target data to sort over. findposition takes in a second string that will be the path to the .csv file we are opening and analysing the header file of. findposition returns an integer representing the position of our target in the headerfile. It will return 0 on error. 
+
+int TraverseDirectory( char* , const char*, const char*, int, int);
+	- NEW function used to traverse our directory in order to find .csv files to sort over in new processes.
+	TraverseDirectory takes in a string representing our current directory to open, a const char* for our target string to sort over, a const char* that represents our output directory to store our sorted files into, an integer which stores our original parent process id, and in integer for our status. 
+
+	TraverseDirectory returns an integer which represents our status. This is for child processes to return to while parent processes wait.
+
+void BeginNewProcess(char* , const char* , char*, const char*);
+	- Processes handler, basically runs Asst0 on a given file.
+	BeginNewProcess takes in a 4 strings. 
+		1. filename - name of the file we are going to use to creating our output file
+		2. target - target name we are going to use to create our ouptut file over and to pass into our other functions.
+		3. path - path string 
+		4. outputdirectory - output directory string
+
+

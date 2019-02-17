@@ -1,0 +1,10 @@
+wait:
+
+	case 1
+		child is running --> block parent
+	case 2
+		child has already exited --> returns immediately
+
+	both receive status of child
+		erase child PID from process table
+

@@ -1,0 +1,2216 @@
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+
+int main (int argc, char ** argv)
+{
+	char aString[] = {'h','e','l','l','o','\0'};
+	char bString[] = "hello";
+	
+	printf("%s \n", aString);
+
+	return 0;
+}
+
+/*
+	C has
+
+	int
+	double
+	char
+	
+	long
+	short
+	unsigned long
+	unsigned int
+	unsigned short
+
+	C does NOT have Strings
+	C has strings which are arrays of chars
+
+	"array of null-terminated chars"
+
+
+	'h' 'e' 'l' 'l' 'o' '\0' --> hello
+	'h' 'e' 'l' 'l' 'o' --> seg fault
+	'\0' is the null-terminator	
+
+	NO BOOLEAN
+	ints are commonly used instead
+	0 is false
+	anything other than 0 is true, but most commonly 1 is used
+
+
+	enum <type name> {<value>, [value] ...}
+	<   > required
+	[   ] optional
+
+	enum boolean{true, false} => true=0, false=1
+	enum boolean{true=1, false=0} => true=1, false=0
+	enum volumes{GALLON=32,QUART=8}
+	enum colors{RED,BLUE,GREEN}
+
+	typedef{
+	enum _boolean {true=1,false=0};
+	} boolean;
+----is equivalent to----
+	typedef enum junk boolean;
+
+	these allow you to call "boolean" without needing to call "enum boolean"
+
+	Arrays are collections of single types
+
+
+
+	If you want an array of multiple types you would need a struct
+
+	struct <name>
+	{
+		[values]
+	};
+	
+	struct <name> <_name> = {[values]};
+
+	like enum, if you typedef, you don't need to specify struct before 
+
+	typedef struct <name1>
+	{
+		[values]
+	}<name>;
+	
+	<name> <_name> = {[values]};
+		
+*/
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+
+int main (int argc, char ** argv)
+{
+
+	struct thingy
+	{
+		int d;
+	};
+
+	struct stuff
+	{
+		int a;
+		double b;
+		char c;
+		struct thingy oddname;
+	};
+
+	struct stuff example = {1, 1.2, 'g', {233}};
+
+	printf("%d\n",example.oddname.d);
+
+	printf("---------------\n");
+//---------------------------------------------------
+
+	char array0[] = "hello";
+	char array1[] = "HELLO";
+
+	printf("%d\n",array1[16]);
+	printf("%c\n",array1[16]);
+
+	array0[0] = 'y';
+
+	printf("%c\n",array1[16]);
+
+
+	printf("---------------\n");
+//---------------------------------------------------
+
+
+	char array2[] = "hello";
+	int num = 9;
+	char array3[] = "HELLO";
+
+	printf("%d\n",array3[16]);
+	printf("%d\n",sizeof(num));
+
+	printf("---------------\n");
+//---------------------------------------------------
+
+	struct things
+	{
+		double b;
+		long c;
+		int a;
+	};
+
+	struct things junk = {1.2,1234,1};
+
+	union thingsAlso
+	{
+		double b;
+		long c;
+		int a;
+	};
+
+	union thingsAlso moreJunk = {1.2};
+
+	printf("sizeof(int)=%d\n",sizeof(int));
+	printf("sizeof(double)=%d\n",sizeof(double));
+	printf("sizeof(long)=%d\n",sizeof(long));
+	printf("sizeof(junk)=%d\n",sizeof(junk));
+	printf("sizeof(moreJunk)=%d\n\n",sizeof(moreJunk));
+
+	printf("moreJunk.a=%d\n",moreJunk.a);
+	printf("moreJunk.b=%f\n\n",moreJunk.b);
+	
+	moreJunk.a = 342;
+
+	printf("moreJunk.a=%d\n",moreJunk.a);
+	printf("moreJunk.b=%f\n\n",moreJunk.b);
+	
+	moreJunk.b = 3.42;
+
+	printf("moreJunk.a=%d\n",moreJunk.a);
+	printf("moreJunk.b=%f\n\n",moreJunk.b);
+
+
+	printf("---------------\n");
+//---------------------------------------------------
+
+	union moreThings
+	{
+		double b;
+		char odd[8];
+		int weird[2];
+	};
+
+	union moreThings crap = {1.2};
+
+	printf("crap char=%c\n", crap.odd[2]);
+	printf("crap num=%d\n\n", crap.weird[0]);
+
+	crap.odd[2] = 'M';
+
+	printf("crap char=%c\n", crap.odd[2]);
+	printf("crap num=%d\n\n", crap.weird[0]);
+
+	printf("---------------\n");
+//---------------------------------------------------
+
+	int b = 0;
+	int* ptr = &b;
+
+	printf("b before increment = %d\n", b);
+
+	increment(b);
+
+	printf("b after increment  = %d\n", b);	
+	
+	increment2(&b);
+
+	printf("b after increment2 = %d\n", b);	
+	printf("---------------\n");
+//---------------------------------------------------
+	int array4[]= {1,2,3};
+	
+	int* ptra = array4;
+
+	printf("%d\n",*array4);
+
+	printf("%lx\n",&array4[0]);
+	printf("%lx\n",&array4[1]);
+	printf("%lx\n",&array4[2]);
+
+	return 0;
+}
+
+int increment(int a) {
+	a=a+1;
+	return 0;
+}
+
+int increment2(int *a) {
+	*a=*a+1;
+	return 0;
+}
+
+/*
+Review from last class:
+	Why C is "better" than Java
+
+	typedef
+	structs
+	enums
+	
+	No boolean primitive
+		false=0
+		true!=0
+		
+typedef{
+	enum _boolean {true=1,false=0};
+} boolean;
+
+------------OR------------
+
+enum _boolean {true=1, false=0};
+typedef enum _boolean boolean;
+
+
+
+struct thingy
+{
+	long d;
+}
+
+struct stuff
+{
+	int a;
+	double b;
+	char c;
+	struct thingy oddname;
+}
+
+struct stuff example = {1, 1.2, 'g', {1}};
+
+	typedef is not necessary, but is typically used, but if you are trying to be very clear, you can leave it out so anybody reading your code will know it is an enum/struct
+
+	
+
+
+	union
+		
+
+*/
+#include "Sept12.h"
+
+int main (int argc, char ** argv)
+{
+
+	int array0[] = {1,3,5};
+	int *stuff0 = array0;
+	printf("%d\n",*stuff0);
+	printf("%d\n",*array0);
+	printf("%d, stuff at array, 1, plus 2 = 3\n",(*array0)+2);//stuff at array, 1, plus 2 = 3
+	printf("%d, add 2*size of element to the address\n",*(array0+2));//add 2*size of element to the address
+
+	double array1[] = {1.1,3.3,5.5};
+	printf("%f\n", *(array1+2));
+
+	printf("---------------\n\n");
+//---------------------------------------------------
+
+	int i = 0;
+
+	while (i<3) {
+		printf("%f\n", *(array1+i));
+		i++;
+	}
+
+	printf("---------------\n\n");
+//---------------------------------------------------
+	
+	stuff1 stuff1a = {1,2.2}; 					//defined in Sept12.h
+
+	printf("{%d, %f}\n", stuff1a.a, stuff1a.b);
+	printf("SOMEINT,SOMEDOUBLE = {%d, %f}\n", SOMEINT, SOMEDOUBLE); //defined in Sept12.h
+
+	printf("---------------\n\n");
+//---------------------------------------------------
+	
+	printf("SQUARE(SOMEINT)=%d\n", SQUARE(SOMEINT));
+	printf("SQUARE(SOMEINT+SOMEINT)=%d\n\n", SQUARE(SOMEINT+SOMEINT));
+	printf("SQUARE1(SOMEINT)=%d\n", SQUARE1(SOMEINT));
+	printf("SQUARE1(SOMEINT+SOMEINT)=%d\n", SQUARE1(SOMEINT+SOMEINT));
+
+	printf("---------------\n\n");
+//---------------------------------------------------
+	
+//	char* inputStuffA[10]; //what if you try to add an 11th item? 
+//	char* inputStuffB[11]; //what if you try to add an 12th item?...
+//	char* inputStuffX[10000000000]; //in theory, you can do it but it takes WAY to much memory, for potentially only a few chars
+	char inputStuff0[10];
+	char* inputStuff1 = (char*)malloc(10*sizeof(char));//because we want space for 10 chars with each taking up 1 byte	
+//inputStuff0 and inputStuff1 are the same size
+
+	inputStuff0[0] = 'a';
+
+	if (inputStuff1 == NULL) {
+		printf("PANIC!\n");
+		return -1;
+	}
+
+	*inputStuff1 = inputStuff0[0];
+	 
+	printf("%c\n", inputStuff1[0]);
+
+	free(inputStuff1);
+	
+
+
+
+
+	return 0;
+}
+
+/*
+double a =23.13431;
+double* addressOfa = &a;
+
+int array[] = {1,2,3};
+int *stuff = array;
+printf("%d\n",*array);
+
+be very careful with #define. It can do weird things that break PEMDAS.
+
+#ifndef is a conditional definition that trips if the name has not been used.
+	must end file with #endif
+
+
+*/
+
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+
+#define SOMEINT 5
+#define SOMEDOUBLE 542.53
+#define SQUARE(x) x*x
+#define SQUARE1(x) (x*x)
+
+typedef
+struct _stuff1 {
+	int a;
+	double b;
+} stuff1;
+
+#include "Sept19.h"
+
+int main (int argc, char ** argv)
+{
+	char buffer[]="howdy!\n";
+	char buffer2[]="ERROR!\n";
+	write(STDOUT ,buffer,7);		//write
+	write(STDERR, buffer2, 7);		//error
+	printf("---------------\n");
+//---------------------------------------------------
+
+	char buffer3[10];
+	read(STDIN, buffer3, 10);
+	write(STDOUT, buffer3, 10);
+	printf("\n");
+	printf("---------------\n");
+//---------------------------------------------------
+	
+	printf("%d\n",mergesort(1));
+
+	return 0;
+}
+
+/*
+File Descriptors:
+	Abstraction for IO
+	
+	Open
+	Close
+
+	Read
+		read to 0 => Standard input => Define in header
+	Write
+		write to 1 => Standard Output => Define in header
+	Error
+		write to 2 => Standard Error => Define in header
+
+Standard Input:
+	command line input, once code is running
+
+UNIX COMMANDS:
+
+
+	cat [OPTION]...[FILE]...
+	cat test.c
+**output**
+#include "test.h"
+...
+}
+	cat [FILENAME] > [FILENAME2]   ==> dumps all of FILENAME into FILENAME2
+	cat test.c | ./a.out > NewFile ==> takes the output of a.out with test.c as input and puts that in NewFile
+
+	more [OPTION]...[FILE]...
+	cat test.c
+**output**
+#include "test.h"
+...
+}
+			breaks up file to readable ammouts
+
+
+	less [OPTION]...[FILE]...
+	cat test.c
+**output**
+#include "test.h"
+...
+}
+			breaks up file to readable ammouts, even more than "more"
+
+
+
+	> 	creates new file or overwrites existing file
+	>>	creates new file of appends to existing file
+	
+	
+LIBRARIES
+	make another C file with functions
+	UNIX code:
+		gcc -c Sept19Lib.c
+	creates:
+		Sept19Lib.o
+	
+	Compile:
+		gcc Sept19.c Sept19Lib.o
+
+AUTOMATE THAT SHIT WITH A MAKEFILE
+	must be named either:
+		Makefile
+		makefile
+	<directive>: [requirement]...
+		<cmd>
+
+	default directives:
+make ==> if you don't give a directive, it will look for "all"
+
+all: test.c testlib.o
+	gcc test.c testlib.o
+
+testlib.o: testlib.c
+	gcc -c testlib.c
+
+clean: 
+	rm a.out testlib.o
+*/
+
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <string.h>
+#include <errno.h>
+
+#ifndef TEST_H
+#define TEST_H
+
+#define STDOUT 1
+#define STDIN 0
+#define STDERR 2
+
+#endif
+int mergesort(int a) {
+	return a+1;
+}
+#include "09-24.h"
+
+int main (int argc, char ** argv)
+{
+	printf("---------------\n");
+//---------------------------------------------------
+
+	return 0;
+}
+
+
+/*
+Assignment:
+
+chars to watch out for:
+	'\n'
+	','
+	'"'
+	' '
+
+comparator:
+	take in 2 things
+	return an int corresponding to their relative order
+
+int comparator(void* param0, void* param1)
+	returns:
+		-1: param0>param1
+		0: param0=param1
+		1: param0<param1
+
+
+int (*comparator)(void*, void*)	//functionpointer
+
+
+
+typedef
+struct_Node
+{
+	?* data;
+	Node* next
+} Node;
+
+int generalizedSort (void* data, int (*comparatorFn)(void*, void*))
+{
+	Node* listHead = dataList;
+
+	int result = comparatorFN(listHead->data, listHead->next->data);
+
+	...if necessary, swap nodes, if not, yay!...continue
+
+	return 0;
+}
+
+int comparatorFn_INT(void* param0. void* param1)
+{
+	if(*((int)param0)>*((int)param1))
+		return -1;
+	else if(*((int)param0)<*((int)param1))
+		return 1;
+	return 0;
+}
+int comparatorFn_DBL(void* param0. void* param1)
+{
+	if(*((double)param0)>*((double)param1))
+		return -1;
+	else if(*((double)param0)<*((double)param1))
+		return 1;
+	return 0;
+}
+
+int comparatorFn_STRING(void* param0. void* param1)
+{
+	return strcmp((char*)param0,(*char)param1);
+}
+
+How to tell if end of file:
+	if read returns 0, file is over
+
+Blocking and Nonblocking
+
+Computation parts:	fast
+IO parts:		SSSSSSLLLLOOOOOOOOOOOOOOWWWWWWWWW
+	
+
+2GHz ->	2*10^-9
+60ms ->	6*10&-2
+
+//Blocking IO --- your code will not continue past the IO call until it is done
+int a = 2+3;
+write(fd, &a, 4);
+a++;
+
+//Non-blocking --- your code will return immediately at the beginning of the next time slice and tell you how much it does
+
+
+char data[10];
+
+int status = 0;
+int reaIn = 0;
+int total = 0;
+
+while (status > 0)
+{
+	status = read(STDIN, data+readIn,total);
+	readIn += status;
+	total -= status;
+}
+
+char buffer = '\0'
+
+while (status > 0)
+{
+	status = read(STDIN, &buffer,1);
+}
+*/
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <string.h>
+#include <errno.h>
+
+#define STDOUT 1
+#define STDIN 0
+#define STDERR 2
+
+
+int main (int argc, char ** argv)
+{
+	int fd = open("./someprotectedfile",O_RDWR);
+
+	if (fd>0){		//use chmod to change permissions to try this out
+		printf("Access GRANTED\n");
+		close(fd);
+	} else if (errno==EACCES){
+		printf("Access DENIED\n");
+	//	return -1;
+	} else {
+		printf("FATAL ERROR in file %s on line %d:\n%s\n", "someprotectedfile, );
+	}
+
+
+	printf("---------------\n");
+//---------------------------------------------------
+
+	fd = open(argv[1],O_RDWR);
+	if (fd>0){		//use chmod to change permissions to try this out
+		printf("Access GRANTED\n");
+		close(fd);
+	} else if (errno==EACCES){
+		printf("Access DENIED\n");
+	//	return -1;
+	} else {
+		printf("FATAL ERROR\n");
+	}
+	char buffer[1000];
+	memset
+	bzero(buffer, 1000)
+	
+	int bytesToRead = 1000;
+	int readSoFar = 0;
+	int status = 1;
+
+
+	while (readSoFar < bytesToRead && status > 0)
+	{
+
+		status = read(fd, &buffer+readSoFar, bytesToRead-readSoFar);
+		readSoFar += status;
+	}
+
+	printf("%d\n", status);
+	printf("%s\n", buffer);
+
+	
+
+
+	return 0;
+}
+
+
+/*
+absolute - path name starting from root .. starting with "/"
+relative - path name starting from current working directory .. starting with "."
+
+cd~ - takes you to root directory
+pwd - displays direcotry URL
+
+open("./a_file", O_RDWR) //note that is letter O, not zero.
+
+check if open() returns -1. If it does, check errno.
+If (errno == EACCES) {ERROR!!!!!!!}
+
+
+touch _________  			creates a new blank file with a given name
+echo "______" 				prints whatever string you give it
+
+echo "______" > touch __________   	writes string to new/blank file
+	
+chmod changes file protection
+
+a g o
+
+w r x
+
+all
+group
+owner
+
+a > g > o
+
+write
+read
+execute
+
+chmod <type>+/-<flavor>
+
+chmod a+r 			everybody has red permission
+chmod o-w 			owner no longer has write permission
+	
+chmod a-w someprotectedfile	removes write permission for everybody on somerotectedfile 
+
+ls -alF				shows permissions, accesses, creator, etc.
+
+permissions recoreded/reported as
+
+	 o   g   a
+	 rwx rwx rwx
+	 000 000 000
+	 110 000 000
+	 6   0   0
+chmod 600 someprotectedfile	sets owner read and write permission, 
+					everybody else does not have permission
+
+chown				changes owner of file
+
+blocking:
+	you call a function - you can not continue calling the function until that call is complete
+non-blocking:
+	you call a function - the program continues as the function is executed
+		call halts until your context until your context is swapped back in, then it immediately returns .. or .. call can return before it is entirely done
+
+HDD latency - strongly dominated by seek time
+	50ms  --> 5*10^-2
+
+DRAM - strongly dominated by t_RC (table row access time)
+	40ns  --> 4*10^-8
+
+hard drive is nearly a million times slower than DRAM
+
+	
+
+
+
+
+
+
+
+ 
+*/
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <string.h>
+#include <errno.h>
+
+#define STDOUT 1
+#define STDIN 0
+#define STDERR 2
+
+int main (int argc, char ** argv)
+{
+	int pid = fork();	//similar to malloc :: free
+	int status = 0;
+
+	if (pid==0) {
+		execv("./testChild", NULL);
+	}
+
+	wait(&status);		//similar to free :: malloc	deallocates memory from child once child is done running
+
+	printf("---------------\n");
+//---------------------------------------------------
+
+	return 0;
+}
+
+
+/*
+i-nodes - 
+	stores:
+		metadata
+		pointers to data
+	basically works like a linked list of data in memory
+
+	generic data structure
+
+
+p-nodes - pointer nodes
+	struct to represnt running code -- emphasis on runnING code
+		How does code 'run' (./)?	FDE LOOP!!!!
+			Fetch - 
+				get value from program counter, load instruction from memory
+				program counter - holds address of next instruction
+
+					(load)
+
+			Decode -
+				determine instruction type and format
+				resolve memory and cache references
+
+					(latch)
+
+			Execute - 
+				perform the operation and increment the program counter
+		
+
+	Process struct needs to hold - 
+		Process Control Block (OS Management Structure)
+			ID, owner, permissions	//not necessary if computer runs one process at a time
+		Process Struct Needs To Hold
+			instructions
+			data
+				stack
+				heap
+
+How do processes run?
+	fork(void);	//duplicates current process	//creates child process
+		returns child processor ID to parent
+			if pid == 0, return
+	exec();		//creates new process
+	kill();		//ends process
+*/
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <string.h>
+#include <errno.h>
+#include <signal.h>
+
+#define STDOUT 1
+#define STDIN 0
+#define STDERR 2
+
+void sigstuff(int signum)
+{
+
+	printf("I got a segfault...w00t\n");
+//	exit(-1);
+
+	return 0;
+}
+
+int main (int argc, char ** argv)
+{
+
+//L1.
+	int pid = fork();
+	int status = 0;
+	
+
+	if (pid==0) {
+		printf("My PID is: %d\n", getpid());
+		
+	}
+	else {
+		printf("My child's PID is: %d\n", pid);
+		wait(&status);
+		printf("return value = %d\n", WEXITSTATUS(status));
+
+		printf("---------------\n");
+//---------------------------------------------------
+
+//L2.
+
+	//Commenting this out because it creates an endless loop of segfaults by running code without updating the program counter
+	// uncomment at your own risk
+	//control c will kill the loop
+
+		void (*sighandler) (int) = sigstuff;
+
+		signal(SIGSEGV, sighandler);
+
+		int a =*((int*)0);
+		
+
+
+	}
+
+
+	return 0;
+}
+
+
+
+/*
+Procs:
+	fork()									//L1.
+		- Creates a child process
+		- Returns 0 to child and child's PID to parent
+			- how does it return to both child and parent?
+				- duplicates the entire parent Process, including execution state - stack vars, registers, etc -  so if parent is waiting for fork() to return, so is child
+			- why does it return a different value to each process?
+				- so the Process knows if it is the parent or the child ... so you can have the child Process do something other than what the parent was doing
+
+				(be careful ... PIDs are not chars or unsigned ints)
+		- All forked PIDs must be greater than 0
+			- otherwise the child and parent would both think they are the child process
+				- they would run the same code				
+				- the parent would not wait for the child - @zombieorphans
+				
+			- PID 0 is the scheduler/init process ... not fork()ed but read directly in to memory as part of the bootstrap process
+
+
+
+Signals:
+	software interrupt .. can be caused by any type of important event
+		- SIGSEGV - seg fault
+		- exit
+	return - returns from current funtion to caller
+	exit() - terminates current context - emits EXIT signal that can be caught
+	_exit() - terminates current Process - does not emit EXIT signal
+		atexit
+
+kill [pid] will kill whatever process you give the pid of
+
+kill -9 stops all processes
+
+
+
+*/
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <string.h>
+#include <errno.h>
+#include <signal.h>
+#include <pthread.h>
+
+#define STDOUT 1
+#define STDIN 0
+#define STDERR 2
+
+
+
+void** aThread(void* stuff)
+{
+	printf("Thread time!\n");
+	pthread_exit((void**)1);
+}
+
+void signalHandler(int signum)
+{
+	_exit(-1);
+
+
+}
+
+void lastBreath()
+{
+	printf("*GASP*\n");
+	return;
+
+}
+
+void someOtherStuff()
+{
+	printf("This is some stuff\n");
+	return;
+}
+
+int main (int argc, char ** argv)
+{
+//L1.
+//	atexit(main(argc,argv));
+
+	printf("---------------\n");
+//---------------------------------------------------
+//L2.
+	atexit(lastBreath);
+
+	printf("---------------\n");
+//---------------------------------------------------
+
+	int pid = fork();
+	int status = 0;
+
+	if (pid == 0)
+	{
+		execv("./testChild", NULL);
+	}
+	wait(&status);
+
+	printf("---------------\n");
+//---------------------------------------------------
+//L3.
+	pthread_t newThread;
+	pthread_attr_t newThreadsAttrs;
+
+	pthread_attr_init(&newThreadsAttrs);
+
+	pthread_create(&newThread, &newThreadsAttrs, aThread, (void*)0);
+	pthread_join(&newThread, (void**)1);
+
+	return 0;
+}
+
+/*
+Signals:
+	Software interupts
+		- subverts the FDE loop ... might interupt it entirely and have the OS take over ... unless you specified a handler for the signal .. in which case the OS causes your handler to run
+
+		- notification of important event (not necessarily an error)
+
+
+Fork():
+	Creates a child process that is a duplicate of the parent
+		- PID
+		- Parent PID
+		- Address Space
+
+Can you call fork without exec?		yes
+Can you call exec without fork?		yes
+
+	Can NOT fork() PID0 (so it is assigned to your bootstrap proc)
+
+
+Life after return(?!):
+	EXIT signal happens after return, but before termination...
+	atexit([funtion(...)]);
+		- calls function on exit			L1. calls main on exit, causing an endless loop
+								L2. calls lastBreath on exit
+
+	IF YOU TERMINATE EXTERNALLY (from the command line, control-C) atexit() WILL NOT BE CALLED
+
+	return	- get out of activation record
+	exit() 	- get out of current context
+	_exit()	- get out of process
+
+while ... not done reading names of stuff
+	......
+while ... all child Procs are not yet done
+	......
+
+Threads
+	- another eceution context ("thread of control") in your Proc
+		- faster to build than another Proc
+		- faster to switch than another Proc
+		- easier to pass data to than another Proc (same as heap)
+
+		- no separate address space (other threads can muck up your stuff while you are/are not running)
+		- not a separate executable (can only run functions in THIS Proc as threads)
+
+
+
+PTHREAD							//L3. is the code for using new threads
+	- pthread_t
+	- pthread_create(&[function()], );
+	- use pthread_exit(1) instead of return;
+	- must have "#include <pthread.h>"
+
+*/
+
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <string.h>
+#include <errno.h>
+#include <signal.h>
+#include <pthread.h>
+
+#define STDOUT 1
+#define STDIN 0
+#define STDERR 2
+
+#define Size 15
+#define File "testText.txt"
+
+void * simple_func(void * arg)
+{
+	printf("THREAD#: %d!\n", *((int*)arg) );
+
+
+	int * retval = (int*)malloc(sizeof(int));
+	*retval = 100;
+
+	pthread_exit((void*) retval);
+}
+
+int main (int argc, char ** argv)
+{
+//L1.
+///	pthread_t * newThread = (pthread_t*)malloc(sizeof(pthread_t));	//Proper way to create thread handle
+//	pthread_create(newThread
+	pthread_t newThread;						//quick and dirty way
+
+	pthread_attr_t newAttrStruct;					//Creates pthread struct
+
+	pthread_attr_init(&newAttrStruct);				//initializes pthread struct
+
+	int *threadArg = (int*)malloc(sizeof(int));
+	*threadArg = 1;
+	
+	int **retThread;
+	
+	pthread_create(&newThread, &newAttrStruct, simple_func, (void*) threadArg);
+	pthread_join(newThread, (void**)retThread);
+
+	printf("%d\n", **retThread);
+
+	free(threadArg);
+	free(*retThread);
+
+	printf("---------------\n");
+//---------------------------------------------------
+
+	return 0;
+}
+
+/*
+Forks - not easy to share pointers between because they do not share the same address space
+Threads - easy to share pointers between because they are just 2 (or more) stacks which share the same address space
+
+
+non-blocking
+|-------------|+++++++++++|***********|+|---------s	
+
+asynchronous
+|-------------|$$$|----|*********************|---------|**********|----^------|
+		 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+blocking
+|------|+++++++++|***************|+++++++++++++|
+
+
+
+
+L1.
+
+Threads :
+	If you don't need address protection, signal handling, etc. it might make more sense to make a new thread instead of a new process
+
+	faster to build/swap between than procs
+	easier to pass data between than procs
+
+	int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start routine) (void*), void*	arg)
+				^			^			^				^
+			pointer to pthread	 thread attributes	function to run			  function args
+
+	pthread_attr_init(pthread_attr_t *attr)
+	pthread_attr_destroy(pthread_attr_t *attr)
+
+	int pthread_join(pthread to join, returnValue)
+	int pthread_detach(pthread to detach)
+
+different types of threads:
+	kernel threads:
+		scope: system
+		-longer to build
+		-longer to swap between
+		-not much control over scheduling
+		+true simultaneity
+		+blocking calls DO NOT halt all threads
+	user threads:
+		scope: user
+		+faster to build
+		+faster to swap
+		+full control over scheduling
+		-no true simultaneity
+		-blocking calls DO halt threads
+	
+*/
+
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <string.h>
+#include <errno.h>
+#include <signal.h>,
+#include <pthread.h>
+
+#define STDOUT 1
+#define STDIN 0
+#define STDERR 2
+
+#define Size 15
+#define File "testText.txt"
+
+
+int main (int argc, char ** argv)
+{
+	printf("---------------\n");
+//---------------------------------------------------
+
+	return 0;
+}
+
+/*
+Threads:
+	an execution context in a process in addition to the main one (i.e. multi-stack process)
+
+User threads:
+	only user knows about it
+	user schedules it to run
+	build a stack in dynamic memory, update stack pointer to point to it and jmp to its first instruction
+		(implement a scheduler, set an alarm signal and make the signal handler handle your schedule)
+
+	+ total control
+	+ faster to build
+	+ faster to swap between
+	+ don't lose runtime optimizations
+	- no true simultaneity
+		blocking call in a user-thread will block all user-threads in the process
+
+Kernel threads:
+	kernel knows about thread
+	kernel schedules it to run
+	
+	... opposite of above...
+
+pthread_create(thread_handle, pointer to thread attributes, functionForThreadToRun, functionArgs*);
+pthread_exit(void* retval);
+pthread_join(pthread_t, void** retval);	// similar to wait(&status) for processes
+	
+kernel threads are default
+
+terminology
+	critical section - CS - a section of code which reads or writes shared data
+		synchronize code before and after critical sections
+		if one thread is accessning shared data, no other thread can access that part of the code
+	race condition - potential for interleaved execution of a critical section by multiple threads
+	mutual exclusion - synchronization mechanism to avoid race condition by ensuring exclusive execution of critical sections
+	deadlock - permenant blocking of threads
+	livelock - 
+	starvation - 
+
+How to provide mutual exclusion?:
+OS?
+	has full control over all the stuff
+	it is the one scheduling in the first place... so it can choose not to  swap a thread out if it is in a critical section
+	it can not be interrupted
+	
+	not a bad idea, but really slow in practice
+User?
+	Set a global status/flag variable to indicate if a shared area is in use
+		- be sure to check it before accessing shared area
+		- if not in use, set it equal to 'in use'
+		- when done, reset it
+	
+		not a bad idea, but it is the same problem as shared memory to begin with...can still have thread colliding on read/write
+
+	Need:
+		- a way to make read, compare, and write to global variable a  transaction
+		     -> A|tomic -> need 3 instructions to happen 'at once'
+			C|onsistency
+			I|solation
+			D|urability
+
+		NO SOFTWARE SOLUTION:
+			Add an opcode to:
+				do each of the three steps at once
+					- first check the indicator
+					- then, if not used
+						- set it to used state
+			Add an opcode to:
+				do each of the three steps at once
+					- get the indicator
+					- set to not used state
+
+		test-and-set -> locking -> mutexes
+			pthread_mutex_init(...)
+			pthread_mutex_destroy(...)			
+			pthread_mutex_lock()		//included in pthread library
+			pthread_mutex_unlock()
+
+
+Thread 1		Thread 2
+lock(mutexA)		lock(mutexA)
+CP+=10			CP-=5
+unlock(mutexA)		unlock(mutexA)				
+
+*/
+
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <string.h>
+#include <errno.h>
+#include <signal.h>
+#include <pthread.h>
+
+#define STDOUT 1
+#define STDIN 0
+#define STDERR 2
+
+#define Size 15
+#define File "testText.txt"
+
+
+int main (int argc, char ** argv)
+{
+	printf("---------------\n");
+//---------------------------------------------------
+
+	return 0;
+}
+
+/*
+Threads:
+	mutexes:	MUTual Exclusion device
+	
+	- ensure we're accessing the correct data at the last time
+	- since threads share memory, yu don't want to overwrite sensitive data
+	- two threads don't access the same critical section *at the same time
+
+	OS - too slow
+	USER - can't be unblockable/uninteruptable
+
+	one of the few times we can't have a software solution ... need hardware help ... special 'instruction' that does all steps 
+
+	test_and_set:	sync instructions
+
+can not sync around a memory location - must explicitly demarcate a segment of code to protect
+
+
+Thread A			Thread B
+				lock(mutex0)
+lock(mutex0)			shared += 45
+shared += 1			unlock(mutex0)
+unlock(mutex0)
+				lock(mutex0)
+				if (shared > 100)...
+				unlock(mutex0)
+		
+
+				
+EXAMPLE OF BAD VERSION
+
+THREAD A			THREAD B
+lock(mutex1)			lock(mutex2)
+lock(mutex2)			lock(mutex1)
+shared2+= shared1;		shared2-=shared1;
+unlock(mutex2)			unlock(mutex1)
+unlock(mutex1)			unlock(mutex2)
+
+
+	thread a locks 1
+	thread b locks 2
+	thread a tries to lock 2 but is blocked
+	thread b tries to lock 1 but is blocked
+
+4 things must happen for deadlock to occur
+	1 - mutual exclusion	
+	2 - no pre-emption
+	3 - hold and wait
+	4 - circular wait
+
+circular wait - 
+	1 - establish a total ordering on mutexes and ALWAYS lock in that sequence
+	2 - rising/falling permission phases
+
+WHAT NOT TO DO WITH MUTEXES:
+	Health and Safety tips for your Mutex
+
+	1 - DO NOT lock a mutex more than once in a thread without unlocking it - You Only Lock Once
+		you will block yourself
+	2 - DO NOT unlock a mutex more than once in a thread without locking it - You Only Unlock Once
+		why tf would you do that?
+
+(secret remedy #127)
+(a double-locked mutex can not be unlocked-but it can be re-initialized) ***REALLY BAD IDEA BUT IT DOES WORK***
+
+other mechanisms - 
+	Barrier: (sync around computation) often implemented with ...
+		unlike a mutex, where the first one to the mutex conntinues on and all others wait --
+		all threads that hit a barrier will wait, and the last one there unlocks all
+*/
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <string.h>
+#include <errno.h>
+#include <signal.h>
+#include <pthread.h>
+
+#define STDOUT 1
+#define STDIN 0
+#define STDERR 2
+
+#define Size 15
+#define File "testText.txt"
+
+
+int main (int argc, char ** argv)
+{
+	printf("---------------\n");
+//---------------------------------------------------
+
+	return 0;
+}
+
+/*
+Asst 2 FAQ:
+	outputs 1 file - sorted outputs of ALL CSVs
+	what if the files have different headers - must be able to handle nulls
+
+
+
+DEADLOCK: **This looks mighty examable**
+	0 - Mutual Exclusion
+	1 - No pre-emption
+	2 - Hold and Wait
+	3 - Circular Wait
+
+Op code:
+	test_and_set -> auutomatically test a shared indicator variable to see if it indicates another context is in the critical section ... if not, set it 
+		- lends itself well to locks, implemented in Pthread library as mutexes
+		- used to protect data ... sunc around code that touches shared space
+
+What not to do with mutexes:
+	Double lock
+	DOuble unlock
+
+0 - Total ordering on all mutexes
+1 - Rising/Falling permission phases
+
+mutex: first one there passes through, any others who reach it at the same time must wait ... once the first unlocks it, only the next proceeds
+	resolves in order of arrival
+barrier: all threads that arrive at the barrie wait for the last one to make it ...  once they are all there, they are all released
+	implemented with a fetch_and_increment instruction
+
+
+mutexes: often used to sync around data					(test_and_set)
+barrier: often used to sync around computation				(fetch_and_increment)
+?: often used to sync around ?
+	what else might you want to sync around or wait for?
+		IO?
+		Time?
+		Instructions?
+	
+		* (other stuff)
+	condition variable: often used to sync around system events	(compare_and_swap)
+		
+Presume: accessing a mutex in a signal handler
+	0 - mutexes are sensitive to ordering ... and the signal can occur at any time, causing you to double-lock, double-unlock, unlock before lock, etc.
+	1 - mutexes are sensitive to identity ... and the signal can occur in any context
+		(signals are Proces-level events, and the signal handler is run by whatever context your Process is currently executing)
+			DO NOT USE MUTEXES IN A SIGNAL HANDLER
+		if thread A locks mutex 2, and then thread B tries to unlock mutex 2, it won't be able to
+		
+Mutexes are 100% not Threadsafe ... if you want to use a sync mechanism in a signal handler, alongside threads, it needs to be
+	0 - insensitive to identity - threadsafe
+	1 - insensitive to ordering - asynchronous
+
+*/
+
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <string.h>
+#include <errno.h>
+#include <signal.h>
+#include <pthread.h>
+
+#define STDOUT 1
+#define STDIN 0
+#define STDERR 2
+
+#define Size 15
+#define File "testText.txt"
+
+
+int main (int argc, char ** argv)
+{
+	printf("---------------\n");
+//---------------------------------------------------
+
+	return 0;
+}
+
+/*
+semaphore_produce(int * indicator, const int MAXVAL)
+{
+	while (*indicator >= MAXVAL) 
+	{}
+
+	*indicator = *indicator + 1;
+
+}
+
+semaphore_consume(int * indicator, const int MAXVAL)
+{
+	while (*indicator <= 0) 
+	{}
+
+	*indicator = *indicator - 1;
+
+}
+
+
+WTF is a semaphore? - old synchronization mechanism
+
+
+What if sync mechanism alone are not enough due to some other imposed ordering or requirements?
+	- would like to ... give all the mechanisms to someone who understands how they all relate and can protect context (threads) from deadlocking
+
+
+	... need some thing that has
+		- all the mechanisms (data
+		- understands the dependencies between them and can allocate beased on them (i.e. functions on the data)
+		- exposes data only through an interface
+		- hides internal values
+
+		OBJECT-ORIENTED Sync Supervisor: a.k.a. - Monitors
+
+
+*/
+
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <string.h>
+#include <errno.h>
+#include <signal.h>
+#include <pthread.h>
+
+#define STDOUT 1
+#define STDIN 0
+#define STDERR 2
+
+#define Size 15
+#define File "testText.txt"
+
+
+int main (int argc, char ** argv)
+{
+	printf("---------------\n");
+//---------------------------------------------------
+
+	return 0;
+}
+
+/*
+Not reliable way to debug codes
+
+pthread_t me = ...;
+printf("%d\n", me ...);
+
+minimize contention:
+	don't have one linked list
+____________________________________
+
+Monitors
+	- object-oriented sync supervisors
+	- avoid deadlock ... but ... why? - more contention -> slower
+		(could global ordering and rising/falling phases to avoid it ... so why the extra resources and contention?)
+		> because if you can not do global ordering due to resource dependencies (machine requirements/protocols/system operation/implementation), the best you can do is encode those dependencies in to the monitor's allocation logic so it can know if you are headed for a deadlock or not and allocate appropriately
+
+		> also used for network communication
+			- socket
+				+ client socket
+					- can connect to server socket
+					- can also send/recieve bytes of data
+				+ server socket
+					- accept client connections
+						- when getting a new connection request:
+							- construct a new 'client' socket on this side to talk to the connection socket
+							- send acknowledgement to connecting socket to let it know the connection is good
+							- "nothing...there is no third thing"
+
+			*C is old. Networking is ugly but once you do it once or twice, it gets better
+
+
+Building Sockets:
+	- server socket
+		socket()	// build sockets
+		bind()		// weld socket to a given port - more about this later
+		listen()	// this socket will only listen ... no talky
+		accept()	// start listening for connection requests...
+
+	- client socket
+		socket()	// build socket
+		connnect()	// connect to server socket
+
+2 annoying data structures you need to use
+	- hostent
+	- sockaddr_in
+
+
+***Must include <sys/types.h> and <sys/socket.h>***
+
+	int sockfd = socket(AF_INET,SOCK_STREAM,0);
+	while ( sockfd < 0)
+	{
+		error("ERROR opening socket");
+	}
+
+	bzero((char*) &serverAddressInfo, sizeof(serverAddressInfo));
+	serverAddressInfo.sin_port = hton(portno);
+	serverAddressInfo.sin_family = AF_INET;
+	serverAddressInfo.sin_addr.s_addr = INADDR_ANY;
+
+	if (bind(sockfd, (struct sockaddr*) &serverAddressInfo, sizeof(serverAddressInfo)) < 0)
+	{
+		error("ERROR on binding")
+	}
+
+	listen(sockfd,5);
+
+	clilen = sizeof(clientAddressInfo);
+
+	newsockfd = accept(sockfd, (struct sockaddr*) &clientAddressInfo, &clilen);
+
+
+	// If we are here, a client tried to connect
+
+	
+--------------------------
+client side
+	serverIPAddress = gethostbyname(argv[1]);	//can give domain as string or IP
+	if (serverIPAddress == NULL)
+	{
+		//error
+	}
+
+*/
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <string.h>
+#include <errno.h>
+#include <signal.h>
+#include <pthread.h>
+
+#define STDOUT 1
+#define STDIN 0
+#define STDERR 2
+
+#define Size 15
+#define File "testText.txt"
+
+
+int main (int argc, char ** argv)
+{
+	printf("---------------\n");
+//---------------------------------------------------
+
+	return 0;
+}
+
+/*
+Socket:
+	abstraction for network communications
+
+	server:
+		accepts connection request
+	client:
+		can connect to a server socket
+		send/receive data
+
+	server socket: 
+		accept() to start listening for connection request
+			returns client socket connected to the Client
+		socket()
+		bind()
+		listen()
+		accept()
+
+	client socket:
+		socket()
+			*annoying bcopy from hostent in to sockaddr_in
+		connect()
+
+
+	read(socketfd, buffer, 100);
+	write(socketfd, buffer, 100);
+
+	  client	 server
+	________	________
+	|	|	|	|
+	|      o|------>|o---	|
+	|	|   |	|    |	|
+	|_______|    -->|o<--	|
+			|_______|
+
+int newClient = accept(serverSock, ... , ... );
+read(newClient, ... , ... );
+
+accept() is blocking ... so how to server more than one client at a time?
+> while blocking on accept(), can not talk to a client ... and while talking to a client, can not accept() the next connection request
+	> hand off each new client socket to a thread so the server socket can get back to accept() as soon as possible
+
+ISO OSI 7-layer stack
+	Application     ----------------|
+	Presentation	----------------|----can all be within the same code
+	Session		----------------|
+	Transport <- TCP, UDP		SOCKETS
+	Networking <-IP -- Internetworking Protocol	figuring out the path of directly connected machines from start to end point
+	Data Link					sends data back and forth if they are directly connected (hardwired)
+	Physical					
+
+
+Encapsulation - the code should be working in a black box. You don't know what is on the other end, you just assume the proper protocols are in place.
+	Internet "hourglass" Architecture Model
+		https://www.google.com/search?q=Internet+%22hourglass%22+Architecture+Model&tbm=isch&source=iu&ictx=1&fir=2JkHWVyOn20dIM%253A%252CHNdfqbu1LUnUgM%252C_&usg=AI4_-kRwwSMcpNh85BjrGIXxekDi2nklJw&sa=X&ved=2ahUKEwjor9rnq9XeAhWJd98KHcyiDPMQ9QEwAnoECAAQBA#imgrc=zi0UM5W7_X-z2M:
+
+what does this mean?
+	cp.cs.rutgers.edu
+		it is converted to an IP address
+	cp.cs.rutgers.edu > 167.26.2.4
+
+
+*/
+
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <string.h>
+#include <errno.h>
+#include <signal.h>
+#include <pthread.h>
+
+#define STDOUT 1
+#define STDIN 0
+#define STDERR 2
+
+#define Size 15
+#define File "testText.txt"
+
+
+int main (int argc, char ** argv)
+{
+	printf("---------------\n");
+//---------------------------------------------------
+
+	return 0;
+}
+
+/*
+
+status =  read(clientSocket, buffer, n);
+
+<name>,<command>,<arg>
+person,deposit,123
+
+adsjfklgjsjsfldfadsgkjafgfgsfjg,deposit,234242414
+
+You don't know how long the message can be
+	set maximums
+		max username:	255
+		max command:	100
+		max amount: 	100
+				= 455
+				round up to power of 2 = 512
+_ _ _:message
+
+read 4 chars
+	maximum of 3 chars to say how long the message is
+	either read first 3 chars or up to the separator, whichever comes first
+	that number (minus the number of characters upto and including the separator) is the size of the message
+
+pick RANDOM port # above 8192 and below 65000
+
+	- build message passing client/server
+		- multi-thread the client
+		- multi-thread the server
+	- command interface				--------\______will take longer than you expect and will be annoying
+	- responses from server				--------/
+	- make sure single-account works		--------\
+		- mutexes				---------+-----annoyingly straight forward
+		- multi-account (mutex)			--------/
+	- diagnostic output (SIGALARM and semaphore)	--------\______write some code to autotest this
+	- server shoutdown (SIGINT and client message)	--------/
+
+
+--------------------------------------------------------------------------------------------------------
+
+DNS	WTF is this?
+	service that uses the transport layer - extra, not an inherent part of the internet
+
+IP - networking layer
+
+TCP & UDP - protocols at transport layer
+
+
+DNS: Domain Name Service
+	translates domain name into IP address
+
+IP - Internetworking Protocol
+	each network is a host
+		Internet is network of networks
+	Networking layer routes indirect connections using routing table
+		A direct link with B
+		B direct link with C
+			A wants to send message to C
+		IP routes A to B to C
+
+	Routes messages from host to host
+	forrms/manages indirect links out of a sequence of DL point-to-point direct links
+
+
+
+Transport Layer Protocol
+	TCP is the default protocol
+		Transmission Control Protocol
+		managing messaging - fast, correct, efficient...
+	- psuedo-reliability - if it does not recieve confirmation from reciever-side, it will retransmit - Coordinating armies problem
+		- how to know the other side got the message?
+			+ have it send acknowledgment
+		- how long should you wait for acknowledgment before retransmitting?
+			+ TTL - Time To Live - i.e. approx. time to server/other side and back again
+		- how to ick it off?
+			+ RTT - Round Trip Time for first message to estimate TTL? >Connection<
+			
+			- client: I want to connect	(SYN) - name of connection request method
+			- server: ok			(SYN-ACK) - name of connection request method - acknowledgment
+			- client: yay			(ACK) - acknowledgment
+
+			
+
+
+*/
+
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <string.h>
+#include <errno.h>
+#include <signal.h>
+#include <pthread.h>
+
+#define STDOUT 1
+#define STDIN 0
+#define STDERR 2
+
+#define Size 15
+#define File "testText.txt"
+
+
+int main (int argc, char ** argv)
+{
+	printf("---------------\n");
+//---------------------------------------------------
+
+	return 0;
+}
+
+/*
+
+server:
+	socket()
+	bind()
+	listen()
+	accept()
+
+client:
+	socket()
+	connect()
+
+
+
+-------------------------------------
+
+TCP:
+	reliability(?)
+		 message------->
+			<-------acknowledge
+	TTL~RTT
+	Time To Live --> Approximated with Round Trip Time
+
+	how to kick-start RTT? ... have a 'handshake' (0th message) to test the connection
+		use the connection request method
+			send connection request and then watch the clock and wait
+
+		---SYN--->		__
+			<---SYN-ACK---	__|--time this take to get back to client is RTT
+		---ACK--->		-----user data
+	
+		Messages should not be too big
+			if one bit is lost/corrupted during transmission, the whole thing will need to be retransmitted
+			+ fast
+			+ little delay
+			- high risk
+			- likely need to be resent
+
+		Messages should not be too small
+			it will take to long to send and wait for acknowledgement on each bit
+			+ low risk
+			- slow
+
+		How big should messages be?
+
+Delivering Data
+	circuit-switching:
+		set-up/address once, all data goes to same place
+	packet-switching:
+		set-up/address each message, piece of data might take a different route
+
+	
+"Hello out there in the Intertubes"
+
+192.1.68.1:20"hello out
+
+192.1.68.1:20 there in t
+
+192.1.68.1:20he Intertubes"
+
+	if the packets aren't recieved in order, you could get:
+
+ there in t"hello outhe Intertubes"
+
+	Ordering - sequence numbering and packet ACKs
+		packet-switching sets a number for each message so you won't get that garbage
+
+		You don't want to send packets that are too big or too small
+			if it is too small the meta-data be much bigger than the data itself.
+
+	Big packets are likely to have errors and need to be resent.
+		What should TCP do to make sure there are less packets needing to be resent?
+			SMALLER PACKETS - takes longer, but less error prone
+
+
+Congestion Control
+
+Flow Control
+	slows network if congested in network or at endpoint
+
+TCP:
+	Reliability
+	Ordering
+	Congestion Control
+	FLow Control
+	
+UDP:
+	...at least it gives you a port to work with...
+
+
+*/
+
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <string.h>
+#include <errno.h>
+#include <signal.h>
+#include <pthread.h>
+
+#define STDOUT 1
+#define STDIN 0
+#define STDERR 2
+
+#define Size 15
+#define File "testText.txt"
+
+
+int main (int argc, char ** argv)
+{
+	printf("---------------\n");
+//---------------------------------------------------
+
+	return 0;
+}
+
+/*
+Do not test on same machine
+
+Turn this one off:
+	set valueto 0
+
+	z = setsockopt(s,
+		SOL_SOCKET,
+		SO_LINGER,
+		&so_linger,
+		sizeof so_linger);
+
+Break glass if needed:		//very dangerous
+	z= setsockopt(s,
+		SOL_SOCKET,
+		SO_REUSEADDR,
+		&so_reuseaddr,
+		sizeof so_reuseaddr);
+
+	&(int*){1}
+
+
+pthread_cond_timedwait(pthread_cond_t *restrict cond,
+		      pthread_mutex_t *restrict mutex,
+		      const struct timespec *restrict abstime);
+
+must use itimer on server side
+
+------------------------------------------------------------------------------------------------
+
+
+ISO OSI 7-layer stack
+	Application     ----------------|
+	Presentation	----------------|----can all be within the same code
+	Session		----------------|
+	Transport <- TCP, UDP		SOCKETS
+	Networking <-IP -- Internetworking Protocol	figuring out the path of directly connected machines from start to end point
+	Data Link					sends data back and forth if they are directly connected (hardwired)
+	Physical
+
+
+Packets - Transport layer (msg<-->packet)
+TCP - 
+	(port)
+	"Reliability"		- retry sends of packets whose delivery timed out
+	Ordering		- deliver packets in orders, regardless of how they arrive
+	Flow Control		- throttle rate of packet sending due to endpoint
+	Congestion Control	- throttle rate of packet sending due to network
+
+UDP - 
+	(port)
+
+
+Why would you use UDP is TCP has so many more features?
+	- Less overhead
+	- Faster
+	
+TCP - Stateful
+	retains information on packets sent/recieved, timing, etc.
+	information that is not in the parameters affects what happens/how things work
+
+UDP - Stateless
+	at least it has a port, right?
+	only information in the parameters affects what happen/how things work
+
+read(fd, buffer,10);
+	Stateful or Stateless?
+
+	Stateful
+		consider the following:
+			read(fd, buffer,10);	//reads first 10 bytes
+			read(fd, buffer,10);	//reads where previous statement left off. Filehandler, although part of the FileDescriptor, is not in the parameters 
+
+
+
+Cookies - 
+	A keypair - a key information storage
+	The serverside will ask you to store information
+		when you reaccess that domain, it sends the information back
+
+
+--------------------------------------------------------------------------------------------
+
+
+Why do we care about state?
+	
+
+what can you send across the network?
+	resources - data
+		send a byte from client, read a byte from socket
+	commands
+		send bytes from client, read in bytes ?
+	computation
+	
+
+Distributed System
+	multiple machines cooperating, giving the illusion of single endpoint, but it isn't
+
+Why distribute?
+	performance
+		instead of going deep, spread everything out
+		a large website can't handle all of the traffic, google, for example, will route a user to any of thousands of machines in order to handle load
+	avaiability
+		there is one path out of australia and it sucks, have a localized host
+	reliability
+		if one machine goes down, the service won't go down
+
+
+*/
+
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <string.h>
+#include <errno.h>
+#include <signal.h>
+#include <pthread.h>
+
+#define STDOUT 1
+#define STDIN 0
+#define STDERR 2
+
+#define Size 15
+#define File "testText.txt"
+
+
+int main (int argc, char ** argv)
+{
+	printf("---------------\n");
+//---------------------------------------------------
+
+	return 0;
+}
+
+/*
+Review
+TCP vs. UDP
+
+Stateful vs. Stateless
+	an operation is stateless if
+		- the output of the function will never change for the same function call
+	an operation is stateful if
+		- the output of the function is determined by factors other than just the parameters
+
+	
+	read(fd, buffer, 10);	//stateful because this depends on how many times it was called previously
+
+	printf("%s\n", "this is a string");	//stateless because it will always output the same thing
+
+
+Req:		Response:
+	cmd		update some data	- 
+	filename	data			- scp, http server
+	executable	result			- terminal/ssh
+
+--------------------------------------------------------------------
+
+RPC - Remote Procedure Calll
+	1) local machine take commands and parameters
+	2) local machine send to remote machine
+	3) remote machine computes and sends back results
+	4) local machine echos results recieved from remote machine
+
+	What could some problems with this be?
+		What could be a problem with sending parameters?
+			- references/pointers wouldn't have access to the memory space to point to
+			- a differnt machine might have a different ISA
+				+ type size and format will might not be the same
+			- types with structure in memory (arrays, structs, unions, ...) might be formatted differently in memory
+		
+		What is the most direct solution?
+			- provide some type of translation
+				+ i.e. an int on my side = ____, an int on your side = ____
+			- use a universal protoypical language
+				+ Marshalling Parameters
+
+Marshalling Parameters:
+	- flatten data types with structure
+	- dereference pointers
+	- translate all types into prototypical types
+
+	**This is what Java does, which is why it is can be compiled on one machine and the executable can be run on any**
+		- code is compiled into "Java Bytecode (tm)"
+			+ a generic representation of assembly (rather than types)
+				- a virtual machine translates the JBC to each individual machine's bytecode
+
+
+Failstop		bad
+	- Something that stops the code and announces what happened - i.e. segfaults
+Crash			worse
+	- halts and remains silent
+Byzantine Faults	worst
+	- non-deterministic behavior or intermittent faults
+
+
+
+
+*/
+

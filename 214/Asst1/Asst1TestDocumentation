@@ -1,0 +1,181 @@
+Test 1: Testing if the program runs when given all valid entries
+
+Input: 
+./scannerCSVsorter -c "budget" -d "." -o "."
+
+Expected Output:
+Initial PID: XXXXX
+
+PIDS of all child processes:
+AAA,BBB,CCC,DDD,EEE,FFF, ...
+
+Total number of processes: 46
+
+Actual Output:
+Initial PID: 10633
+
+PIDS of all child processes: 
+10673, 10654, 10652, 10658, 10650, 10671, 10672, 10677, 10676, 10679, 10674, 10675, 10667, 10670, 10669, 10680, 10678, 10656, 10661, 10659, 10663, 10665, 10662, 10660, 10664, 10657, 10668, 10666, 10655, 10653, 10649, 10651, 10634, 10635, 10636, 10637, 10639, 10640, 10641, 10647, 10648, 10643, 10646, 10645, 10644, 10642, 10638, 
+
+Total number of processes: 47
+
+-------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------
+
+Test 2: Testing if the program defaults the directories to the source directory when not specified
+
+Input: 
+./scannerCSVsorter -c "budget"
+
+Expected Output:
+Initial PID: XXXXX
+PIDS of all child processes: AAA,BBB,CCC,DDD,EEE,FFF, ...
+Total number of processes: 46
+
+Actual Output:
+Initial PID: 12811
+
+PIDS of all child processes: 
+12831, 12837, 12840, 12834, 12847, 12829, 12838, 12835, 12832, 12857, 12858, 12856, 12855, 12861, 12862, 12843, 12844, 12842, 12845, 12846, 12853, 12854, 12852, 12836, 12839, 12841, 12849, 12848, 12828, 12833, 12827, 12830, 12812, 12813, 12814, 12815, 12817, 12818, 12819, 12825, 12826, 12821, 12822, 12823, 12824, 12816, 12820, 
+
+Total number of processes: 46
+
+-------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------
+
+Test 3: Testing when there are column, given in the parameters, does not exist in the csv files
+
+Input: 
+./scannerCSVsorter -c CRASH
+
+Expected Output:
+Initial PID: XXXXX
+Couldn't locate target \"CRASH" input for file: [FILE_0.csv]
+   >Exiting Child Process
+[...]
+Couldn't locate target \"CRASH" input for file: [FILE_45.csv]
+   >Exiting Child Process
+PIDS of all child processes: AAA,BBB,CCC,DDD,EEE,FFF, ...
+Total number of processes: 46
+
+Actual Output:
+Initial PID: 18064
+
+PIDS of all child processes: 
+Couldn't locate target "CRASH" input for file: [movie_metadata.csv]
+   >Exiting Child Process
+Couldn't locate target "CRASH" input for file: [test2.csv]
+   >Exiting Child Process
+Couldn't locate target "CRASH" input for file: [test1.csv]
+   >Exiting Child Process
+Couldn't locate target "CRASH" input for file: [dataset1_b4.csv]
+   >Exiting Child Process
+Couldn't locate target "CRASH" input for file: [dataset2_a3.csv]
+   >Exiting Child Process
+Couldn't locate target "CRASH" input for file: [dataset1_c4.csv]
+   >Exiting Child Process
+Couldn't locate target "CRASH" input for file: [dataset3_a5.csv]
+   >Exiting Child Process
+Couldn't locate target "CRASH" input for file: [dataset2_c3.csv]
+   >Exiting Child Process
+Couldn't locate target "CRASH" input for file: [dataset2_d3.csv]
+   >Exiting Child Process
+Couldn't locate target "CRASH" input for file: [dataset3_c5.csv]
+   >Exiting Child Process
+Couldn't locate target "CRASH" input for file: [test5.csv]
+   >Exiting Child Process
+Couldn't locate target "CRASH" input for file: [dataset2_b3.csv]
+   >Exiting Child Process
+18083, 18088, 18091, 18085, Couldn't locate target "CRASH" input for file: [dataset3_b5.csv]
+   >Exiting Child Process
+Couldn't locate target "CRASH" input for file: [test3.csv]
+   >Exiting Child Process
+Couldn't locate target "CRASH" input for file: [test4.csv]
+   >Exiting Child Process
+Couldn't locate target "CRASH" input for file: [dataset1_d4.csv]
+   >Exiting Child Process
+18099, 18097, 18080, 18079, 18082, 18081, Couldn't locate target "CRASH" input for file: [dataset1_a4.csv]
+   >Exiting Child Process
+18086, 18089, 18092, 18084, Couldn't locate target "CRASH" input for file: [dataset1_a5.csv]
+   >Exiting Child Process
+Couldn't locate target "CRASH" input for file: [dataset3_c2.csv]
+   >Exiting Child Process
+Couldn't locate target "CRASH" input for file: [dataset1_b5.csv]
+   >Exiting Child Process
+Couldn't locate target "CRASH" input for file: [dataset1_a2.csv]
+   >Exiting Child Process
+Couldn't locate target "CRASH" input for file: [dataset2_a5.csv]
+   >Exiting Child Process
+Couldn't locate target "CRASH" input for file: [dataset2_b5.csv]
+   >Exiting Child Process
+Couldn't locate target "CRASH" input for file: [dataset3_a2.csv]
+   >Exiting Child Process
+Couldn't locate target "CRASH" input for file: [dataset2_a2.csv]
+   >Exiting Child Process
+Couldn't locate target "CRASH" input for file: [dataset2_b2.csv]
+   >Exiting Child Process
+18105, 18101, 18102, 18103, 18104, Couldn't locate target "CRASH" input for file: [dataset3_b2.csv]
+   >Exiting Child Process
+18087, 18093, 18090, 18094, 18095, 18107, 18106, 18110, 18108, 18109, 18096, 18098, 18100, 18065, 18066, 18067, 18068, 18070, 18071, 18072, 18069, 18078, 18075, 18073, 18074, 18076, 18077, 
+
+-------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------
+
+Test 4: Testing when the column parameter are left out
+
+Input: 
+./scannerCSVsorter -c -d "." -o "."
+
+Expected Output:
+Error: 	(Six Parameters entered). Exiting Program.
+
+Actual Output:
+Initial PID: 28247
+
+PIDS of all child processes: 
+Error: (Six Parameters entered). Exiting Program
+
+-------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------
+
+Test 5: Testing when the column flag and parameter are left out
+
+Input: 
+./scannerCSVsorter -d "." -o "."
+
+Expected Output:
+Error: Parameters incorrect (5 parameters entered). Exiting Program.
+
+Actual Output:
+Initial PID: 23104
+
+PIDS of all child processes: 
+Error: Parameters incorrect (5 parameters entered). Exiting Program.
+
+-------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------
+				
+Test 6	: Testing when the coumn does not exist in all of the tables. Modified "dataset1_b4.csv" in "test1" by changing "gross" header
+
+Input: 
+./scannerCSVsorter -c gross -d "./test1" -o "./Output"
+
+Expected Output:
+Initial PID: XXXXX
+
+PIDS of all child processes:
+	>Exitng child process
+AAA,BBB,CCC,DDD
+
+Total number of processes: 4
+
+Actual Output:
+Initial PID: 9847
+
+PIDS of all child processes:
+	>Exitng child process 
+9852, 9851, 9848, 9850, 9849, 
+
+Total number of processes: 5
+
+

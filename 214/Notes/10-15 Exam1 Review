@@ -1,0 +1,106 @@
+Blocking vs Non-blocking
+	Blocking
+		
+	Non-blocking
+
+int status = read(fd, buffer, bytesToRead);
+	
+	status equals bytes read
+	if non-blocking: potentially partial result
+	if blocking: full results or something broke
+
+const int * ptr = // cannot change value that pointer points to
+const int * const ptr = // cannot change either
+int * const ptr = // cannot change the address
+
+// Following lines will compile and run.
+int a=2;
+const int * ptr = &a;
+a=3;
+
+// Compiler error on line 4
+int a=2;
+const int * ptr = &a;
+a=3;
+*ptr=4;
+
+// Compiler warning on line 3
+int a=2;
+const int * ptr = &a;
+*ptr=4;	
+
+// Compiler error on line 4
+int a=2;
+const int * ptr = &a;
+*ptr=4;
+a=5;
+
+CALLOC vs. MALLOC
+	CALLOC MUST BE CONTIGUOS
+	MALLOC DOES NOT NEED TO BE CONTIGUOS, BUT IT WILL APPEAR CONTIGUOUS
+
+SIGNALS
+	Software Interrupt - FDE Loop
+		Fetch
+			load
+		Decode
+			latch
+		Execute
+
+	intruction address
+		Ox1
+		Ox2
+		Ox3
+		SIGNAL
+
+FDE Loop interrupted
+COntext swapped out
+OS swapped in
+OS runs code
+If your process has not been terminated,
+Restores old state of registers
+Continues your code from where program counter left off.
+
+When will malloc return NULL?
+	memory is full or the OS had another reason for it, such as no swap file
+	terminate process or try again
+
+Anatomy of process
+	the makeup of the process
+
+When traversing a directory, do files or directories get precidence?
+	
+
+INODE vs PNODE
+	What's an inode?
+		a representation of ________
+		works like a linked list
+			has data and pointer to next inode
+
+exec
+	Happily running code and then fork()
+		New process created
+		both processes waiting for child to complete
+			child gets 0 from fork
+			parent gets child pid
+
+
+	Happily running code and then exec()
+		New process created
+		both processes waiting for child to complete
+			new stack, heap, etc.
+			child gets 0 from fork
+			parent gets child pid
+	
+	when you call ./a.out in terminal, terminal calls fork, and then exec to your code from the child.
+		if it didn't call fork, it would replace the terminal with your code
+
+ZOMBIE: Process that has run all executable code, has returned, sent the exit signal, but parent process has not wait()ed on it yet
+ORPHAN: Process whose parent is no longer running
+
+	you can have a zombie, or a zombie orphan
+
+chown - change file owner (change who can edit it's permissions)	
+
+
+	

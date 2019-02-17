@@ -1,0 +1,6 @@
+Document your design, assumptions, difficulties you had and testing procedure. Include any test CSV 
+files you used in your documentation. Be sure to also include a short description of how to use your 
+code. Look at the man pages for suggestions on format and content. Do not neglect your header file. Be
+sure to describe the contents of it and why you needed them. Submit this as “Asst1Doc.txt” or 
+“Asst1Doc.pdf”. Do not submit any proprietary or Microsoft documents
+
